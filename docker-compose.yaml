@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  mysql-container:
+    image: mysql:latest
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - projet_network
+    volumes:
+      - mysql-sata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootilyas"
+      MYSQL_DATABASE: "testdb"
+  backend:
+    image: dahhouilyas/backend:1.0.3
+    container_name: backend
+    ports:
+      - "8080:8080"
+    networks:
+      - projet_network
+    depends_on:
+      - mysql-container
+  frontend:
+    image: dahhouilyas/frontend:1.0.1
+    container_name: frontend
+    ports:
+      - "8081:80"
+    networks:
+      - projet_network
+    depends_on:
+      - backend
+volumes:
+  mysql-sata:
+    driver: local
+networks:
+  projet_network:
+    driver: bridge
